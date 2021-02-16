@@ -206,7 +206,7 @@ public class BlockType {
             case 5:
                 return rightFaceTexture;
             default:
-                Debug.Log("You done messed up!");
+                Debug.Log("You done messed up");
                 return 0;
         }
 

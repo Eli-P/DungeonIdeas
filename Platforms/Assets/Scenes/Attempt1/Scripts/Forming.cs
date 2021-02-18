@@ -11,6 +11,8 @@ public class Forming : MonoBehaviour
     private Rigidbody playerRigid;
     private Vector3 pos;
 
+    private int[,] blocks = new int[20, 20];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +32,7 @@ public class Forming : MonoBehaviour
         }
         transform.position = pos;
     }
-    public void Ended(Vector3 oldPos){
+    public void Ended(Transform oldPos){
 
 
     }

@@ -13,14 +13,15 @@ public class Player : MonoBehaviour
     private float jump;
     private Rigidbody rigid;
     private bool onGround;
-    private GameObject respawn;
+    public GameObject respawn;
     public float health;
+    public float terminalVelocity;
     // Start is called before the first frame update
     void Start()
     {
         rigid = transform.GetComponent<Rigidbody>();
+        transform.position = respawn.transform.position;
         onGround = true;
-        respawn = GameObject.Find("Respawn");
     }
 
     // Update is called once per frame
@@ -43,6 +44,11 @@ public class Player : MonoBehaviour
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * h);
 
     }
+    private void FixedUpdate() {
+        if(rigid.velocity.y < -terminalVelocity){
+            rigid.AddForce(Vector3.up * (terminalVelocity - rigid.velocity.y));
+        }
+    }
     private void OnCollisionEnter(Collision other) {
         if (other.collider.tag == "Ground"){
             onGround = true;
@@ -53,6 +59,11 @@ public class Player : MonoBehaviour
         if (other.collider.tag == "Bullet"){
             other.collider.GetComponent<BulletScript>().End(gameObject.tag);
             health -= .1f;
+        }
+    }
+    private void OnTriggerEnter(Collider other) {
+        if(other.tag == "Matrix"){
+            transform.position = new Vector3(transform.position.x, other.transform.GetChild(0).position.y, transform.position.z);
         }
     }
 }

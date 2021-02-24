@@ -308,7 +308,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1636072258}
   - component: {fileID: 1636072259}
-  - component: {fileID: 1636072260}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -343,6 +342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 0
+  biome: {fileID: 11400000, guid: 2f0ee65d7c265f34a9a7b7727a6f1207, type: 2}
   player: {fileID: 963194228}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: de42f55e8c5928e4a815e2879d034fb9, type: 2}
@@ -387,64 +387,16 @@ MonoBehaviour:
     bottomFaceTexture: 7
     leftFaceTexture: 7
     rightFaceTexture: 7
+  - name: Dirt
+    isSolid: 1
+    backFaceTexture: 2
+    frontFaceTexture: 2
+    topFaceTexture: 2
+    bottomFaceTexture: 2
+    leftFaceTexture: 2
+    rightFaceTexture: 2
   activeChunkCount: 0
   generatedChunkCount: 0
   inactiveChunkCount: 0
   inactiveChunkCount2: 0
   inactiveChunkCount3: 0
---- !u!114 &1636072260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1636072257}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b2e6a1e96534434bb5d1dfb074ea1ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 963194228}
-  spawn: {x: 0, y: 0, z: 0}
-  material: {fileID: 2100000, guid: de42f55e8c5928e4a815e2879d034fb9, type: 2}
-  blocktypes:
-  - blockName: Air
-    isSolid: 0
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: Bedrock
-    isSolid: 1
-    backFaceTexture: 5
-    frontFaceTexture: 5
-    topFaceTexture: 5
-    bottomFaceTexture: 5
-    leftFaceTexture: 5
-    rightFaceTexture: 5
-  - blockName: Stone
-    isSolid: 1
-    backFaceTexture: 1
-    frontFaceTexture: 1
-    topFaceTexture: 1
-    bottomFaceTexture: 1
-    leftFaceTexture: 1
-    rightFaceTexture: 1
-  - blockName: Grass
-    isSolid: 1
-    backFaceTexture: 3
-    frontFaceTexture: 3
-    topFaceTexture: 0
-    bottomFaceTexture: 2
-    leftFaceTexture: 3
-    rightFaceTexture: 3
-  - blockName: Gravel
-    isSolid: 1
-    backFaceTexture: 7
-    frontFaceTexture: 7
-    topFaceTexture: 7
-    bottomFaceTexture: 7
-    leftFaceTexture: 7
-    rightFaceTexture: 7

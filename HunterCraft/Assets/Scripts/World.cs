@@ -6,6 +6,7 @@ public class World : MonoBehaviour
 {
 
     public int seed;
+    public BiomeAttributes biome;
 
     public Transform player;
     public Vector3 spawnPosition;
@@ -13,22 +14,20 @@ public class World : MonoBehaviour
     public Material material;
     public BlockType[] blockType;
 
-    public int activeChunkCount;
-    public int generatedChunkCount;
-    public int inactiveChunkCount;
-    public int inactiveChunkCount2;
-    public int inactiveChunkCount3;
 
     Chunk[,] chunks = new Chunk[VoxelData.worldSizeInChunks, VoxelData.worldSizeInChunks];
 
     List<ChunkCoord> activeChunks = new List<ChunkCoord>();
+
+    
+
+
     ChunkCoord playerChunkCoord;
     ChunkCoord playerLastChunkCoord;
 
     private void Start() {
 
         Random.InitState(seed);
-
         spawnPosition = new Vector3((VoxelData.worldSizeInChunks * VoxelData.chunkWidth) / 2f, VoxelData.chunkHeight + 2f, (VoxelData.worldSizeInChunks * VoxelData.chunkWidth) / 2f);
 
         GenerateWorld();
@@ -43,7 +42,6 @@ public class World : MonoBehaviour
         if(!playerChunkCoord.Equals(playerLastChunkCoord)){
             CheckViewDistance();
         }
-        activeChunkCount = activeChunks.Count;
 
     }
 
@@ -66,7 +64,7 @@ public class World : MonoBehaviour
         return new ChunkCoord(x, z);
 
     }
-
+    
     void CheckViewDistance(){
 
         
@@ -74,10 +72,9 @@ public class World : MonoBehaviour
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
 
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
-        inactiveChunkCount3 = previouslyActiveChunks.Count;
 
-        for(int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x - VoxelData.viewDistanceInChunks; x++){
-            for(int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z - VoxelData.viewDistanceInChunks; z++){
+        for(int x = coord.x - VoxelData.viewDistanceInChunks; x < coord.x + VoxelData.viewDistanceInChunks; x++){
+            for(int z = coord.z - VoxelData.viewDistanceInChunks; z < coord.z + VoxelData.viewDistanceInChunks; z++){
 
                 if (IsChunkInWorld(new ChunkCoord(x,z))){
 
@@ -94,7 +91,7 @@ public class World : MonoBehaviour
 
                 }
                 
-                inactiveChunkCount = previouslyActiveChunks.Count;
+                // inactiveChunkCount = previouslyActiveChunks.Count;
                 for (int i = 0; i < previouslyActiveChunks.Count; i++){
                     
                     if (previouslyActiveChunks[i].x == x && previouslyActiveChunks[i].z == z){
@@ -104,13 +101,17 @@ public class World : MonoBehaviour
                     }
 
                 }
-                inactiveChunkCount2 = previouslyActiveChunks.Count;
+                // inactiveChunkCount2 = previouslyActiveChunks.Count;
             }
         }
         
         Deactivate(previouslyActiveChunks);
 
     }
+
+    
+
+
 
     public void Deactivate(List<ChunkCoord> PAC){
         
@@ -123,31 +124,57 @@ public class World : MonoBehaviour
 
     public byte GetVoxel(Vector3 pos){
         
+        int yPos = Mathf.FloorToInt(pos.y);
+
+
         if (!IsVoxelInWorld(pos)){
             return 0;
         }
-        if(pos.y < 1){
+
+        if (yPos == 0)
             return 1;
-        }else if (pos.y == VoxelData.chunkHeight-1)
+
+        /* FIRST PASS */
+
+        int terrainHieght = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector3(pos.x, pos.z), 0, biome.scale)) + biome.solidGroundHeight;
+        byte voxelValue = 0;
+
+        if (yPos == terrainHieght)
+            voxelValue = 3;
+        else if (yPos < terrainHieght && yPos > terrainHieght - 4)
+            voxelValue = 5;
+        else if (yPos > terrainHieght)
+            return 0;
+        else
         {
-            float tempNoise = Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0f, .1f);
-            if (tempNoise < 0.5f){
-                return 3;
-            }else
-            {
-                return 4;
-            }
-        }else
-        {
-            return 2;
+            voxelValue = 2;
         }
+
+        /* SECOND PASS */
+        if (voxelValue == 2){
+
+            foreach (Lode lode in biome.lodes)
+            {
+                
+                if(yPos > lode.minHeight && yPos < lode.maxHeight)
+                    if(Noise.Get3DPerlin(pos, lode.noiseOffset, lode.scale, lode.threshold))
+                        voxelValue = lode.blockID;
+
+            }
+
+        }
+        
+        return voxelValue;
+        
+
     }
+    
 
     void CreateNewChunk(int x, int z){
 
         chunks[x,z] = new Chunk(new ChunkCoord(x,z), this);
         activeChunks.Add(new ChunkCoord(x,z));
-        generatedChunkCount += 1;
+        // generatedChunkCount += 1;
 
     }
 

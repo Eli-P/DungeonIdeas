@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af6bdbd2cd6912548948057bf2b9e454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 0
+  seed: 1
   biome: {fileID: 11400000, guid: 2f0ee65d7c265f34a9a7b7727a6f1207, type: 2}
   player: {fileID: 622012590}
   spawnPosition: {x: 0, y: 0, z: 0}

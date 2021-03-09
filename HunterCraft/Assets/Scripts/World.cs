@@ -39,9 +39,8 @@ public class World : MonoBehaviour
 
         playerChunkCoord = GetChunkCoordFromVector3(player.position);
         
-        //if(!playerChunkCoord.Equals(playerLastChunkCoord)){
-        //    CheckViewDistance();
-        //}
+        if(!playerChunkCoord.Equals(playerLastChunkCoord))
+            CheckViewDistance();
 
     }
 
@@ -67,9 +66,8 @@ public class World : MonoBehaviour
     
     void CheckViewDistance(){
 
-        
-
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
+        playerLastChunkCoord = playerChunkCoord;
 
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunks);
 
@@ -179,7 +177,7 @@ public class World : MonoBehaviour
         }
         
         return voxelValue;
-        
+         
 
     }
     

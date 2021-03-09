@@ -32,16 +32,33 @@ public class Player : MonoBehaviour
         world = GameObject.Find("World").GetComponent<World>();
 
     }
-
-    private void Update() {
+    
+    private void FixedUpdate() {
         
-        GetPlayerInputs();
+        CalculateVelocity();
 
+        if(jumpRequest)
+            Jump();
         
 
         transform.Rotate(Vector3.up * mouseHorizontal);
         cam.Rotate(Vector3.left * mouseVertical);
         transform.Translate(velocity, Space.World);
+
+
+    }
+
+    private void Update() {
+        
+        GetPlayerInputs();
+
+    }
+
+    void Jump () {
+
+        verticalMomentum = jumpForce;
+        isGrounded = false;
+        jumpRequest = false;
 
     }
 
@@ -54,6 +71,18 @@ public class Player : MonoBehaviour
             velocity = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * sprintSpeed;
         else
             velocity = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * walkSpeed;
+
+        velocity += Vector3.up *verticalMomentum * Time.fixedDeltaTime;
+
+        if((velocity.z > 0 && front) || (velocity.z < 0 && back))
+            velocity.z =0;
+        if((velocity.x > 0 && right) || (velocity.x < 0 && left))
+            velocity.x =0;
+
+        if(velocity.y < 0)
+            velocity.y = checkDownSpeed(velocity.y);
+        else if (velocity.y > 0)
+            velocity.y = checkUpSpeed(velocity.y);
 
     }
 

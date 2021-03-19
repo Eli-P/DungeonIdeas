@@ -6,6 +6,7 @@ using Unity.Burst;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Transforms;
 
 [UpdateInGroup(typeof(ClientSimulationSystemGroup))]
 public struct CubeInput : ICommandData
@@ -97,7 +98,7 @@ public class GoInGameClientSystem : ComponentSystem
         {
             PostUpdateCommands.AddComponent<NetworkStreamInGame>(ent);
             var req = PostUpdateCommands.CreateEntity();
-            PostUpdateCommands.AddComponent<GoInGameRequest>(req);
+            PostUpdateCommands.AddComponent<Game.GoInGameRequest>(req);
             PostUpdateCommands.AddComponent(req, new SendRpcCommandRequestComponent { TargetConnection = ent });
         });
     }
